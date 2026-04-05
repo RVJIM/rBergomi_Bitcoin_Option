@@ -1,6 +1,29 @@
-# Exclude thesis writing folders
+# Thesis writing (excluded)
 LaTeX/
 Paper/
+docs/
+
+# IDE / Claude settings
+.claude/
+.vscode/
+.idea/
+
+# Office / presentation files
+*.md
+*.docx
+*.pptx
+*.xlsx
+
+# Logs and output files
+*.out
+*.log
+
+# Empty result folders
+calibration_results/
+figures/
+
+# Loose root-level artifacts
+btc_vs_rv_b.png
 
 # Python
 __pycache__/
@@ -25,7 +48,3 @@ env/
 # OS
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/
-.idea/
