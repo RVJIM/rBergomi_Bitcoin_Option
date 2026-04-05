@@ -1,8 +1,4 @@
 # Pricing and Calibration of Bitcoin Inverse Options via Rough Bergomi
-
-Master's thesis — University of Padova  
-Author: Riccardo Vignato
-
 ---
 
 ## Overview
