@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: Trump inauguration  (20 Jan 2025)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,2580 & 3,960 & -0,251 & 29,34\,pp & 9,3\,min \\
+   & Hyb.+Euler & 0,3336 & 2,440 & 0,000 & 19,15\,pp & 30\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,857 & 0,000 & 20,73\,pp & 12\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,1226 & 3,594 & -0,089 & 94,03\,pp & 7,6\,min \\
+   & Hyb.+Euler & 0,0100 & 2,708 & 0,000 & 70,17\,pp & 26\,s \\
+   & Hyb.+Mixed & 0,4015 & 3,207 & -0,002 & 21,24\,pp & 22\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,1307 & 3,947 & -0,008 & 83,99\,pp & 8,5\,min \\
+   & Hyb.+Euler & 0,0100 & 2,985 & 0,000 & 34,41\,pp & 19\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,091 & 0,000 & 16,09\,pp & 20\,s \\
+  \bottomrule
+\end{tabular}

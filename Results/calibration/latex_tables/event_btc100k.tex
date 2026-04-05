@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: BTC \$100k  (5 Dec 2024)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,0797 & 3,069 & -0,225 & 87,75\,pp & 4,6\,min \\
+   & Hyb.+Euler & 0,0294 & 2,679 & 0,000 & 45,33\,pp & 34\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,791 & 0,000 & 12,33\,pp & 26\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,0977 & 2,948 & 0,000 & 10,10\,pp & 5,6\,min \\
+   & Hyb.+Euler & 0,0100 & 3,340 & 0,000 & 16,77\,pp & 24\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,019 & 0,000 & 17,72\,pp & 17\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,1189 & 3,564 & 0,000 & 45,54\,pp & 8,0\,min \\
+   & Hyb.+Euler & 0,4900 & 0,300 & -0,862 & 14,86\,pp & 36\,s \\
+   & Hyb.+Mixed & 0,4900 & 0,300 & 0,000 & 14,31\,pp & 13\,s \\
+  \bottomrule
+\end{tabular}

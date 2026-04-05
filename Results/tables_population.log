@@ -1,0 +1,36 @@
+2026-03-28 11:04:27,946 - INFO - ======================================================================
+2026-03-28 11:04:27,946 - INFO -   TABLE POPULATION — rBergomi Chapter 3
+2026-03-28 11:04:27,946 - INFO - ======================================================================
+2026-03-28 11:04:27,946 - INFO - 
+[Step 1] Loading all calibration CSVs...
+2026-03-28 11:04:27,969 - INFO -   Loaded 90 rows across 3 methods.
+2026-03-28 11:04:27,969 - INFO - 
+[Step 2] Generating event tables...
+2026-03-28 11:04:27,972 - INFO -   -> event_luna.tex
+2026-03-28 11:04:27,974 - INFO -   -> event_ftx.tex
+2026-03-28 11:04:27,977 - INFO -   -> event_svb.tex
+2026-03-28 11:04:27,979 - INFO -   -> event_etf.tex
+2026-03-28 11:04:27,981 - INFO -   -> event_halving.tex
+2026-03-28 11:04:27,984 - INFO -   -> event_btc100k.tex
+2026-03-28 11:04:27,988 - INFO -   -> event_trump.tex
+2026-03-28 11:04:27,988 - INFO - 
+[Step 3] Generating baseline IV-regime tables...
+2026-03-28 11:04:27,991 - INFO -   -> baseline_low.tex
+2026-03-28 11:04:27,995 - INFO -   -> baseline_medium.tex
+2026-03-28 11:04:27,998 - INFO -   -> baseline_high.tex
+2026-03-28 11:04:27,998 - INFO - 
+[Step 4] Generating cross-method comparison table...
+2026-03-28 11:04:28,007 - INFO -   -> cross_method.tex
+2026-03-28 11:04:28,007 - INFO - 
+[Step 5] Generating speed-accuracy table...
+2026-03-28 11:04:28,012 - INFO -   -> speed_accuracy.tex
+2026-03-28 11:04:28,012 - INFO - 
+======================================================================
+2026-03-28 11:04:28,012 - INFO -   Table population complete.
+2026-03-28 11:04:28,012 - INFO -   Output: Results\calibration\latex_tables/
+2026-03-28 11:04:28,012 - INFO - 
+  To include in Chapter 3, use:
+2026-03-28 11:04:28,012 - INFO -     \input{../Results/calibration/latex_tables/event_luna.tex}
+2026-03-28 11:04:28,012 - INFO -     \input{../Results/calibration/latex_tables/cross_method.tex}
+2026-03-28 11:04:28,012 - INFO -     etc.
+2026-03-28 11:04:28,012 - INFO - ======================================================================

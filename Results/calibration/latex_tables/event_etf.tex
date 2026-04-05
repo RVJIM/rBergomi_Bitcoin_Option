@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: Bitcoin Spot ETF  (10 Jan 2024)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,0967 & 2,401 & -0,084 & 21,36\,pp & 3,0\,min \\
+   & Hyb.+Euler & 0,2902 & 2,034 & 0,000 & 25,31\,pp & 27\,s \\
+   & Hyb.+Mixed & 0,2355 & 2,181 & -0,207 & 27,68\,pp & 16\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,0926 & 2,626 & 0,000 & 22,15\,pp & 60\,s \\
+   & Hyb.+Euler & 0,0100 & 2,730 & 0,000 & 28,95\,pp & 26\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,153 & -0,327 & 28,75\,pp & 22\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,0956 & 3,421 & -0,019 & 13,50\,pp & 1,5\,min \\
+   & Hyb.+Euler & 0,0100 & 3,405 & 0,000 & 22,21\,pp & 25\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,202 & -0,107 & 19,00\,pp & 18\,s \\
+  \bottomrule
+\end{tabular}

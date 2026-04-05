@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2024-09-14T12:00:00.000000,59952.84983489106,0.01,3.230588229423095,0.0,0.28459929318089844,0.5334784842717637,77.99974515674467,50.75879278244515,74,136,23.402546882629395,true,differential_evolution,poor,hybrid_euler,mid_iv_autumn_2024

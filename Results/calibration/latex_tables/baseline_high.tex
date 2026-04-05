@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Baseline: High IV ($\gtrsim 70\%$)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Date} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Post-LUNA recovery & Chol.+Euler & 0,0245 & 3,587 & 0,000 & 102,62\,pp & 1,9\,min \\
+   & Hyb.+Euler & 0,0594 & 3,633 & -0,665 & 65,97\,pp & 2,2\,min \\
+   & Hyb.+Mixed & 0,0139 & 1,413 & -0,990 & 88,61\,pp & 16\,s \\
+  \addlinespace[3pt]
+  Post-FTX recovery & Chol.+Euler & 0,2098 & 2,946 & -0,838 & 38,53\,pp & 5,6\,min \\
+   & Hyb.+Euler & 0,1520 & 3,847 & -0,808 & 53,81\,pp & 1,1\,min \\
+   & Hyb.+Mixed & 0,0100 & 1,565 & -0,780 & 27,92\,pp & 12\,s \\
+  \addlinespace[3pt]
+  Bull run 2025 & Chol.+Euler & 0,0644 & 3,300 & -0,674 & 20,34\,pp & 3,9\,min \\
+   & Hyb.+Euler & 0,0100 & 3,708 & 0,000 & 37,46\,pp & 22\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,676 & 0,000 & 20,20\,pp & 17\,s \\
+  \bottomrule
+\end{tabular}

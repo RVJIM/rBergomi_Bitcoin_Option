@@ -1,0 +1,22 @@
+
+BITCOIN OPTIONS VOLATILITY SMILE ANALYSIS
+Generated: 2026-03-28 11:59:55
+============================================================
+
+DATA OVERVIEW
+Total Options: 956
+  - Calls: 485
+  - Puts: 471
+
+Average Spot: $60,841.58
+
+VOLATILITY BY MONEYNESS
+  OTM Puts (K/S < 0.95): 75.09% (169 options)
+  ATM (0.95-1.05): 54.19% (582 options)
+  OTM Calls (K/S > 1.05): 68.13% (183 options)
+
+SMILE EVIDENCE
+  OTM Put Premium: +20.90 percentage points
+
+This confirms OTM puts trade at significantly higher IV than ATM,
+reflecting demand for downside protection that Black-Scholes cannot capture.

@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Baseline: Low IV ($\lesssim 45\%$)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Date} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Calm summer 2023 & Chol.+Euler & 0,0835 & 2,228 & -0,306 & 3,10\,pp & 1,9\,min \\
+   & Hyb.+Euler & 0,1312 & 2,308 & -0,194 & 2,97\,pp & 37\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,701 & 0,000 & 3,94\,pp & 9\,s \\
+  \addlinespace[3pt]
+  Pre-rally 2023 & Chol.+Euler & 0,0785 & 2,075 & -0,698 & 3,82\,pp & 1,5\,min \\
+   & Hyb.+Euler & 0,1622 & 2,299 & -0,526 & 4,20\,pp & 24\,s \\
+   & Hyb.+Mixed & 0,0226 & 2,603 & -0,110 & 5,55\,pp & 15\,s \\
+  \addlinespace[3pt]
+  Post-ETF rally & Chol.+Euler & 0,0418 & 2,578 & -0,384 & 8,44\,pp & 1,6\,min \\
+   & Hyb.+Euler & 0,0100 & 2,881 & -0,066 & 34,95\,pp & 21\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,074 & 0,000 & 7,34\,pp & 12\,s \\
+  \bottomrule
+\end{tabular}

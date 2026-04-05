@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: FTX bankruptcy  (8 Nov 2022)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,0721 & 2,882 & -0,319 & 12,53\,pp & 2,1\,min \\
+   & Hyb.+Euler & 0,0100 & 3,203 & 0,000 & 74,93\,pp & 16\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,888 & -0,337 & 13,28\,pp & 16\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,1636 & 3,543 & -0,354 & 124,65\,pp & 2,0\,min \\
+   & Hyb.+Euler & 0,0100 & 3,056 & 0,000 & 63,50\,pp & 17\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,922 & -0,592 & 18,84\,pp & 14\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,2188 & 3,847 & -0,808 & 55,96\,pp & 4,2\,min \\
+   & Hyb.+Euler & 0,2188 & 3,847 & -0,808 & 67,56\,pp & 57\,s \\
+   & Hyb.+Mixed & 0,4900 & 2,722 & -0,655 & 56,26\,pp & 12\,s \\
+  \bottomrule
+\end{tabular}

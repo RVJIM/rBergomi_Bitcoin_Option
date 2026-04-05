@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2025-02-03T12:00:00.000000,95271.69471144551,0.01,3.7076564775652567,0.0,0.31966780823411955,0.5653917298954059,37.458574894246844,28.998620136883662,106,112,22.261945962905884,true,differential_evolution,poor,hybrid_euler,mid_iv_bull_run_2025

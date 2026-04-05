@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: LUNA/UST collapse  (9 May 2022)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,1955 & 3,407 & -0,321 & 30,35\,pp & 6,1\,min \\
+   & Hyb.+Euler & 0,0100 & 2,958 & 0,000 & 41,91\,pp & 37\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,059 & -0,321 & 18,94\,pp & 15\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,1130 & 3,396 & -0,110 & 73,25\,pp & 7,1\,min \\
+   & Hyb.+Euler & 0,0100 & 2,763 & 0,000 & 32,93\,pp & 42\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,675 & -0,572 & 27,23\,pp & 17\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,1514 & 3,334 & -0,004 & 48,06\,pp & 4,6\,min \\
+   & Hyb.+Euler & 0,1775 & 3,896 & -0,809 & 69,89\,pp & 1,7\,min \\
+   & Hyb.+Mixed & 0,0100 & 1,782 & -0,507 & 32,57\,pp & 19\,s \\
+  \bottomrule
+\end{tabular}

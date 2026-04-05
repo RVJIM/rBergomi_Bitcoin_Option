@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2022-11-09T12:00:00.000000,17745.192003473618,0.21883363045805307,3.846714209925261,-0.8081740453951345,0.6554081858289298,0.8095728415830967,67.55656703478509,53.08321777234239,39,428,56.96654939651489,true,differential_evolution,poor,hybrid_euler,ftx_post

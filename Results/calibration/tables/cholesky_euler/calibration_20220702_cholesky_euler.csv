@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2022-07-02T12:00:00.000000,19167.038413151047,0.023922394221670557,3.6199891634062644,-0.9380168002646145,0.599567114233316,0.7743171922625224,90.17453454530191,82.23446463649245,36,184,180.71467804908752,true,differential_evolution,poor,cholesky_euler,high_iv_bear_2022

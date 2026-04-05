@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2024-04-19T12:00:00.000000,64659.349769685,0.01,2.6111738074913022,0.0,0.48792955852128406,0.6985195477016259,91.06527875374447,51.75826302854898,81,152,22.590584993362427,true,differential_evolution,poor,hybrid_euler,halving_pre

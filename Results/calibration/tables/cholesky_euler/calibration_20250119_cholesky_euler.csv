@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2025-01-19T12:00:00.000000,104720.07902930904,0.25797199971748114,3.959984166309428,-0.25126465578842117,0.4206130445021074,0.6485468714766168,29.344695990427482,24.291229699286117,90,496,556.0446422100067,true,differential_evolution,borderline,cholesky_euler,trump_pre

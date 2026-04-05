@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2023-08-12T12:00:00.000000,29393.03428034813,0.0835367317915687,2.227506034480768,-0.3057520622020993,0.08591294793811143,0.293109105860107,3.0950550647754995,2.2178363279396307,44,272,115.38812041282654,true,differential_evolution,good,cholesky_euler,low_iv_summer_2023

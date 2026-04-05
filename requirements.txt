@@ -1,0 +1,25 @@
+# rBergomi Thesis — Python Dependencies
+# Install: pip install -r requirements.txt
+
+# --- Core Scientific Stack ---
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+polars>=0.20
+
+# --- Visualization ---
+matplotlib>=3.7
+seaborn>=0.12
+
+# --- Async Data Download (deribit_data.py) ---
+aiohttp>=3.9
+
+# --- Optimization & Retries ---
+tenacity>=8.2
+
+# --- Progress Bars ---
+tqdm>=4.65
+
+# --- Cython (optional, for rbergomi_core.pyx) ---
+setuptools>=68.0
+# cython>=3.0  # uncomment if building rbergomi_core.pyx

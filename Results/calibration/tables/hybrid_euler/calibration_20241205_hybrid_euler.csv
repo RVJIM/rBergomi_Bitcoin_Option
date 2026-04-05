@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2024-12-05T12:00:00.000000,102774.30908896956,0.01,3.3396875774819748,0.0,0.35449369086896676,0.5953937276029759,16.766995199057497,13.173591155119182,126,116,24.409191608428955,true,differential_evolution,acceptable,hybrid_euler,btc100k_event

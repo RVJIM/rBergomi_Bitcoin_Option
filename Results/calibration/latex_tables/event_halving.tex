@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: Fourth halving  (20 Apr 2024)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,0889 & 2,084 & -0,037 & 41,68\,pp & 2,7\,min \\
+   & Hyb.+Euler & 0,0100 & 2,611 & 0,000 & 91,07\,pp & 23\,s \\
+   & Hyb.+Mixed & 0,0100 & 0,923 & -0,314 & 25,40\,pp & 24\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,0136 & 2,817 & -0,722 & 19,09\,pp & 2,8\,min \\
+   & Hyb.+Euler & 0,4900 & 0,300 & -0,838 & 21,80\,pp & 22\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,120 & -0,029 & 21,99\,pp & 21\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,0801 & 2,740 & 0,000 & 21,14\,pp & 1,8\,min \\
+   & Hyb.+Euler & 0,4900 & 0,300 & -0,844 & 24,29\,pp & 27\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,515 & 0,000 & 24,24\,pp & 25\,s \\
+  \bottomrule
+\end{tabular}

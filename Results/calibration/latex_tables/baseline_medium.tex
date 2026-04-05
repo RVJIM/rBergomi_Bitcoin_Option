@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Baseline: Medium IV ($45$--$70\%$)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Date} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Crypto winter & Chol.+Euler & 0,2318 & 3,805 & -0,787 & 20,29\,pp & 2,1\,min \\
+   & Hyb.+Euler & 0,3171 & 2,692 & -0,990 & 58,10\,pp & 26\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,086 & -0,403 & 15,54\,pp & 14\,s \\
+  \addlinespace[3pt]
+  Bear market 2022 & Chol.+Euler & 0,0239 & 3,620 & -0,938 & 90,17\,pp & 3,0\,min \\
+   & Hyb.+Euler & 0,4308 & 3,565 & -0,881 & 29,55\,pp & 2,0\,min \\
+   & Hyb.+Mixed & 0,0100 & 0,927 & -0,791 & 38,10\,pp & 14\,s \\
+  \addlinespace[3pt]
+  Autumn 2024 & Chol.+Euler & 0,0436 & 2,999 & -0,656 & 22,50\,pp & 5,7\,min \\
+   & Hyb.+Euler & 0,0100 & 3,231 & 0,000 & 78,00\,pp & 23\,s \\
+   & Hyb.+Mixed & 0,0100 & 1,682 & -0,223 & 11,45\,pp & 20\,s \\
+  \bottomrule
+\end{tabular}

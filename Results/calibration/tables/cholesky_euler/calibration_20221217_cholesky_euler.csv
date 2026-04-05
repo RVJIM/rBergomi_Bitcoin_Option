@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2022-12-17T12:00:00.000000,16709.939541876414,0.2317627857491837,3.8049483565637168,-0.7871049515318405,0.2929776242601857,0.5412740749936077,20.28864503297971,14.408918898619362,32,156,128.06198620796204,true,differential_evolution,borderline,cholesky_euler,mid_iv_crypto_winter

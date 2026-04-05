@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2024-01-11T12:00:00.000000,47298.92751512222,0.01,2.2016867123031503,-0.1069097750003066,0.3490542066103205,0.5908080962633472,18.998103753407943,15.89725983916881,94,108,17.82670307159424,true,differential_evolution,acceptable,hybrid_mixed,etf_post

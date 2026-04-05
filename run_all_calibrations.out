@@ -1,0 +1,83 @@
+/sessions/ecstatic-sleepy-johnson/mnt/Thesis/src/rbergomi/pricer.py:50: UserWarning: Numba not available. Using NumPy fallback (slower).
+  warnings.warn("Numba not available. Using NumPy fallback (slower).")
+/sessions/ecstatic-sleepy-johnson/mnt/Thesis/src/rbergomi/mixed_estimator.py:76: UserWarning: Numba not available. Mixed Estimator will use NumPy fallback.
+  warnings.warn("Numba not available. Mixed Estimator will use NumPy fallback.")
+2026-03-24 11:34:30,377 - RunAll - INFO - ======================================================================
+2026-03-24 11:34:30,396 - RunAll - INFO -   ALL-MODEL CALIBRATION PIPELINE
+2026-03-24 11:34:30,414 - RunAll - INFO -   BLP2017 | MP2018 | Hybrid
+2026-03-24 11:34:30,428 - RunAll - INFO - ======================================================================
+2026-03-24 11:34:30,444 - RunAll - INFO - 
+[Step 1/5] Loading option index...
+2026-03-24 11:34:30,480 - IVSurfaceBuilder - INFO - Loading existing index from data/option_index.parquet
+2026-03-24 11:34:30,567 - IVSurfaceBuilder - INFO - Index loaded: 56641 instruments
+2026-03-24 11:34:30,579 - RunAll - INFO -   Index ready: 56641 instruments
+2026-03-24 11:34:30,586 - RunAll - INFO - 
+[Step 2/5] Discovering snapshot dates...
+2026-03-24 11:34:30,601 - RunAll - INFO - Using 27 pre-selected snapshot dates
+2026-03-24 11:34:30,610 - RunAll - INFO -   2022-05-14
+2026-03-24 11:34:30,621 - RunAll - INFO -   2022-06-13
+2026-03-24 11:34:30,633 - RunAll - INFO -   2022-06-18
+2026-03-24 11:34:30,648 - RunAll - INFO -   2022-06-25
+2026-03-24 11:34:30,658 - RunAll - INFO -   2022-07-02
+2026-03-24 11:34:30,670 - RunAll - INFO -   2022-11-09
+2026-03-24 11:34:30,681 - RunAll - INFO -   2022-11-12
+2026-03-24 11:34:30,689 - RunAll - INFO -   2022-11-19
+2026-03-24 11:34:30,698 - RunAll - INFO -   2022-12-10
+2026-03-24 11:34:30,709 - RunAll - INFO -   2022-12-17
+2026-03-24 11:34:30,723 - RunAll - INFO -   2023-03-11
+2026-03-24 11:34:30,734 - RunAll - INFO -   2023-07-15
+2026-03-24 11:34:30,744 - RunAll - INFO -   2023-07-29
+2026-03-24 11:34:30,752 - RunAll - INFO -   2023-08-05
+2026-03-24 11:34:30,763 - RunAll - INFO -   2023-08-12
+2026-03-24 11:34:30,774 - RunAll - INFO -   2023-09-23
+2026-03-24 11:34:30,783 - RunAll - INFO -   2023-09-30
+2026-03-24 11:34:30,799 - RunAll - INFO -   2024-01-12
+2026-03-24 11:34:30,804 - RunAll - INFO -   2024-02-10
+2026-03-24 11:34:30,809 - RunAll - INFO -   2024-04-22
+2026-03-24 11:34:30,820 - RunAll - INFO -   2024-06-15
+2026-03-24 11:34:30,830 - RunAll - INFO -   2024-08-05
+2026-03-24 11:34:30,837 - RunAll - INFO -   2024-09-14
+2026-03-24 11:34:30,846 - RunAll - INFO -   2024-11-07
+2026-03-24 11:34:30,855 - RunAll - INFO -   2025-01-22
+2026-03-24 11:34:30,862 - RunAll - INFO -   2025-02-03
+2026-03-24 11:34:30,867 - RunAll - INFO -   2025-03-15
+2026-03-24 11:34:30,872 - RunAll - INFO - 
+[Step 3/5] Running BLP2017 calibration...
+2026-03-24 11:34:30,877 - RunAll - INFO - 
+======================================================================
+2026-03-24 11:34:30,888 - RunAll - INFO -   MODEL 1 / 3: BLP2017 (Hybrid Scheme, Euler MC)
+2026-03-24 11:34:30,902 - RunAll - INFO - ======================================================================
+2026-03-24 11:34:30,906 - BLP2017.calibrator - INFO - CalibratorBLP initialized: kappa=6, n_paths=10,000, n_steps=50
+2026-03-24 11:34:30,995 - rBergomi.visualizer - INFO - CalibrationVisualizer initialized: Results/calibration/figures/blp2017 (scheme=hybrid, pricing_method=, model_subfolder=blp2017)
+2026-03-24 11:34:31,011 - RunAll - INFO - 
+[BLP2017 1/27] snapshot_20220514 (2022-05-14)
+2026-03-24 11:34:48,416 - IVSurfaceBuilder - INFO - Surface @ 2022-05-14 12:00:00: 37 points, TTM range [0.035, 0.208] years
+2026-03-24 11:34:48,428 - BLP2017.calibrator - INFO - ============================================================
+2026-03-24 11:34:48,435 - BLP2017.calibrator - INFO - BLP2017 CALIBRATION (Hybrid Scheme, no VR)
+2026-03-24 11:34:48,444 - BLP2017.calibrator - INFO - kappa=6, n_paths=10,000
+2026-03-24 11:34:48,452 - BLP2017.calibrator - INFO - ============================================================
+2026-03-24 11:34:49,478 - BLP2017.calibrator - INFO -   Eval   10: H=0.160, eta=1.53, rho=-0.68 | RMSE=37.11pp | Best=29.75pp | 1s
+2026-03-24 11:34:50,673 - BLP2017.calibrator - INFO -   Eval   20: H=0.386, eta=3.02, rho=-0.93 | RMSE=29.62pp | Best=29.62pp | 2s
+2026-03-24 11:34:51,697 - BLP2017.calibrator - INFO -   Eval   30: H=0.062, eta=1.09, rho=-0.90 | RMSE=36.67pp | Best=29.62pp | 3s
+2026-03-24 11:34:52,909 - BLP2017.calibrator - INFO -   Eval   40: H=0.422, eta=2.97, rho=-0.45 | RMSE=41.99pp | Best=29.62pp | 4s
+2026-03-24 11:34:53,987 - BLP2017.calibrator - INFO -   Eval   50: H=0.389, eta=1.69, rho=-0.78 | RMSE=35.98pp | Best=29.62pp | 6s
+2026-03-24 11:34:55,099 - BLP2017.calibrator - INFO -   Eval   60: H=0.353, eta=1.29, rho=-0.90 | RMSE=35.89pp | Best=29.62pp | 7s
+2026-03-24 11:34:56,374 - BLP2017.calibrator - INFO -   Eval   70: H=0.168, eta=3.75, rho=-0.34 | RMSE=47.76pp | Best=29.62pp | 8s
+2026-03-24 11:34:57,291 - BLP2017.calibrator - INFO -   Eval   80: H=0.426, eta=2.55, rho=-0.10 | RMSE=33.48pp | Best=29.22pp | 9s
+2026-03-24 11:34:58,246 - BLP2017.calibrator - INFO -   Eval   90: H=0.347, eta=0.88, rho=-0.00 | RMSE=33.64pp | Best=28.69pp | 10s
+2026-03-24 11:34:59,772 - BLP2017.calibrator - INFO -   Eval  100: H=0.343, eta=3.12, rho=-0.03 | RMSE=35.64pp | Best=28.69pp | 11s
+2026-03-24 11:35:01,340 - BLP2017.calibrator - INFO -   Eval  110: H=0.311, eta=3.72, rho=-0.04 | RMSE=101.76pp | Best=28.40pp | 13s
+2026-03-24 11:35:02,396 - BLP2017.calibrator - INFO -   Eval  120: H=0.314, eta=3.71, rho=-0.04 | RMSE=89.58pp | Best=28.27pp | 14s
+2026-03-24 11:35:03,411 - BLP2017.calibrator - INFO -   Eval  130: H=0.310, eta=3.75, rho=-0.04 | RMSE=112.79pp | Best=28.26pp | 15s
+2026-03-24 11:35:04,578 - BLP2017.calibrator - INFO -   Eval  140: H=0.304, eta=3.83, rho=-0.04 | RMSE=28.26pp | Best=28.26pp | 16s
+2026-03-24 11:35:05,636 - BLP2017.calibrator - INFO -   Eval  150: H=0.304, eta=3.83, rho=-0.04 | RMSE=28.26pp | Best=28.26pp | 17s
+2026-03-24 11:35:06,778 - BLP2017.calibrator - INFO -   Eval  160: H=0.304, eta=3.82, rho=-0.04 | RMSE=28.23pp | Best=28.23pp | 18s
+2026-03-24 11:35:07,715 - BLP2017.calibrator - INFO -   Eval  170: H=0.305, eta=3.81, rho=-0.04 | RMSE=28.19pp | Best=28.19pp | 19s
+2026-03-24 11:35:08,964 - BLP2017.calibrator - INFO -   Eval  180: H=0.312, eta=3.74, rho=-0.03 | RMSE=103.84pp | Best=28.19pp | 21s
+2026-03-24 11:35:10,179 - BLP2017.calibrator - INFO -   Eval  190: H=0.310, eta=3.77, rho=-0.04 | RMSE=122.78pp | Best=28.19pp | 22s
+2026-03-24 11:35:11,256 - BLP2017.calibrator - INFO -   Eval  200: H=0.305, eta=3.81, rho=-0.04 | RMSE=28.19pp | Best=28.19pp | 23s
+2026-03-24 11:35:12,429 - BLP2017.calibrator - INFO -   Eval  210: H=0.305, eta=3.81, rho=-0.04 | RMSE=28.19pp | Best=28.19pp | 24s
+2026-03-24 11:35:13,716 - BLP2017.calibrator - INFO -   Eval  220: H=0.305, eta=3.81, rho=-0.04 | RMSE=28.18pp | Best=28.18pp | 25s
+2026-03-24 11:35:15,098 - BLP2017.calibrator - INFO -   Eval  230: H=0.305, eta=3.81, rho=-0.04 | RMSE=28.18pp | Best=28.18pp | 27s
+2026-03-24 11:35:16,318 - BLP2017.calibrator - INFO -   Eval  240: H=0.306, eta=3.81, rho=-0.04 | RMSE=80.54pp | Best=28.18pp | 28s
+2026-03-24 11:35:17,799 - BLP2017.calibrator - INFO -   Eval  250: H=0.305, eta=3.81, rho=-0.04 | RMSE=60.56pp | Best=28.18pp | 29s

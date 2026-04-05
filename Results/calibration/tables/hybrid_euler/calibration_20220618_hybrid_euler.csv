@@ -1,0 +1,2 @@
+date,spot,H,eta,rho,xi,sigma_atm,rmse_pp,mae_pp,n_points,n_evals,time_seconds,success,method,quality_flag,method_name,label
+2022-06-18T12:00:00.000000,19268.319585751586,0.05944096770394727,3.6328306046646284,-0.6652690729267974,1.052850608479578,1.0260850883233699,65.96956478808373,60.828767156351816,47,584,129.9136724472046,true,differential_evolution,poor,hybrid_euler,high_iv_post_luna

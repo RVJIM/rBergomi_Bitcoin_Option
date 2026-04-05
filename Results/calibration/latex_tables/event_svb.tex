@@ -1,0 +1,20 @@
+% ──────────────────────────────────────────────────────────────────
+% Event: SVB banking crisis  (10 Mar 2023)
+% ──────────────────────────────────────────────────────────────────
+\begin{tabular}{l l r r r r r}
+  \toprule
+  \textbf{Day} & \textbf{Method} & \textbf{$H$} & \textbf{$\eta$} & \textbf{$\rho$} & \textbf{RMSE} & \textbf{Time} \\
+  \midrule
+  Day$-$1 & Chol.+Euler & 0,0906 & 2,629 & -0,632 & 63,25\,pp & 54,6\,min \\
+   & Hyb.+Euler & 0,2418 & 2,413 & -0,627 & 9,77\,pp & 31\,s \\
+   & Hyb.+Mixed & 0,0135 & 2,309 & -0,204 & 11,61\,pp & 16\,s \\
+  \addlinespace[3pt]
+  Day & Chol.+Euler & 0,0563 & 2,927 & -0,708 & 19,19\,pp & 1,3\,min \\
+   & Hyb.+Euler & 0,1858 & 1,446 & -0,990 & 17,68\,pp & 23\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,016 & -0,663 & 15,90\,pp & 15\,s \\
+  \addlinespace[3pt]
+  Day$+$1 & Chol.+Euler & 0,0535 & 2,900 & -0,733 & 26,02\,pp & 1,1\,min \\
+   & Hyb.+Euler & 0,2396 & 1,754 & -0,990 & 25,30\,pp & 23\,s \\
+   & Hyb.+Mixed & 0,0100 & 2,072 & -0,643 & 22,23\,pp & 15\,s \\
+  \bottomrule
+\end{tabular}
