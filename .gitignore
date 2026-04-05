@@ -9,10 +9,13 @@ docs/
 .idea/
 
 # Office / presentation files
-*.md
 *.docx
 *.pptx
 *.xlsx
+
+# Markdown (except README)
+*.md
+!README.md
 
 # Logs and output files
 *.out
