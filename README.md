@@ -1,6 +1,8 @@
 # Pricing and Calibration of Bitcoin Inverse Options via Rough Bergomi
 ---
 
+> For a visual overview of the code architecture and thesis structure, open [portfolio.html](portfolio.html) in a browser.
+
 ## Overview
 
 This repository contains the full Python implementation for the pricing and calibration of **Bitcoin inverse options** using the **rough Bergomi (rBergomi) model**.

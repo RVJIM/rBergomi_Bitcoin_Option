@@ -27,6 +27,7 @@ docs/
 
 # Loose root-level artifacts
 btc_vs_rv_b.png
+cleanup.sh
 
 # Raw data (2.1 GB, download via Deribit API — see README)
 data/
