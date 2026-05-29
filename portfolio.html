@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rBergomi Bitcoin Inverse Options — Portfolio</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --accent: #4f8ef7;
+    --accent2: #7c5cbf;
+    --green: #3cb878;
+    --yellow: #e8c44d;
+    --text: #d4d8e8;
+    --muted: #7a7f99;
+    --code-bg: #13151f;
+    --font: 'Segoe UI', system-ui, sans-serif;
+    --mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.7; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .wrapper { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 2.5rem 0; }
+  header .wrapper { display: flex; flex-direction: column; gap: 0.4rem; }
+  header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+  header h1 span { color: var(--accent); }
+  header .meta { color: var(--muted); font-size: 0.9rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+  header .meta b { color: var(--text); }
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+  .badge-blue  { background: rgba(79,142,247,.15); color: var(--accent); border: 1px solid rgba(79,142,247,.3); }
+  .badge-purple{ background: rgba(124,92,191,.15); color: #a07ee0; border: 1px solid rgba(124,92,191,.3); }
+  .badge-green { background: rgba(60,184,120,.15); color: var(--green); border: 1px solid rgba(60,184,120,.3); }
+  .badge-yellow{ background: rgba(232,196,77,.15); color: var(--yellow); border: 1px solid rgba(232,196,77,.3); }
+
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  nav .wrapper { display: flex; gap: 0; overflow-x: auto; }
+  nav a { padding: 0.8rem 1.2rem; font-size: 0.85rem; font-weight: 500; white-space: nowrap; color: var(--muted); border-bottom: 2px solid transparent; }
+  nav a:hover, nav a.active { color: var(--accent); border-bottom-color: var(--accent); text-decoration: none; }
+
+  main { padding: 3rem 0 5rem; }
+  section { margin-bottom: 4rem; }
+  h2 { font-size: 1.35rem; font-weight: 700; color: #fff; margin-bottom: 1.5rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.7rem; }
+  h2 .num { background: var(--accent); color: #fff; font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 4px; }
+  h3 { font-size: 1rem; font-weight: 600; color: #c0c8e8; margin: 1.5rem 0 0.6rem; }
+  p { margin-bottom: 0.8rem; color: var(--text); }
+  ul { padding-left: 1.4rem; margin-bottom: 0.8rem; }
+  li { margin-bottom: 0.3rem; }
+
+  /* Cards */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.4rem; }
+  .card h4 { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-family: var(--mono); }
+  .card p  { font-size: 0.85rem; color: var(--muted); margin: 0; }
+  .card ul { font-size: 0.83rem; color: var(--muted); margin: 0.4rem 0 0; }
+
+  /* Pipeline diagram */
+  .pipeline { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .pipe-step { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.9rem; font-size: 0.8rem; font-family: var(--mono); color: var(--text); }
+  .pipe-arrow { color: var(--muted); font-size: 1rem; }
+
+  /* Code blocks */
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; margin: 0.8rem 0 1rem; }
+  code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+
+  /* Results table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+  th { background: var(--surface); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 0.55rem 0.9rem; border-bottom: 1px solid rgba(42,45,58,.5); }
+  tr:last-child td { border-bottom: none; }
+  td code { background: none; padding: 0; }
+
+  /* Decision boxes */
+  .decision { background: var(--surface); border-left: 3px solid var(--accent2); border-radius: 0 6px 6px 0; padding: 0.8rem 1.2rem; margin: 0.8rem 0; font-size: 0.88rem; }
+  .decision strong { color: var(--accent); }
+
+  /* Method comparison */
+  .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1rem 0; }
+  .method-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .method-card.best { border-color: rgba(60,184,120,.4); }
+  .method-card h5 { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.4rem; font-family: var(--mono); }
+  .method-card p  { font-size: 0.8rem; color: var(--muted); margin: 0; }
+
+  /* Stat highlights */
+  .stats { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1.2rem; min-width: 150px; }
+  .stat .val { font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .stat .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem 0; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  @media (max-width: 640px) {
+    .method-grid { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrapper">
+    <h1>Pricing Bitcoin Inverse Options via <span>rBergomi</span></h1>
+    <div class="meta">
+      <span><b>Author:</b> Riccardo Vignato</span>
+      <span><b>Institution:</b> University of Padova — MSc Quantitative Finance</span>
+      <span><b>Defended:</b> May 2026</span>
+      <span><b>Language:</b> Python 3.10+</span>
+    </div>
+    <div style="margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+      <span class="badge badge-blue">Rough Volatility</span>
+      <span class="badge badge-blue">rBergomi Model</span>
+      <span class="badge badge-purple">Bitcoin Options</span>
+      <span class="badge badge-purple">Inverse Options</span>
+      <span class="badge badge-green">Monte Carlo</span>
+      <span class="badge badge-green">Hybrid Scheme</span>
+      <span class="badge badge-yellow">Deribit Data</span>
+      <span class="badge badge-yellow">Calibration</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrapper">
+    <a href="#overview">Overview</a>
+    <a href="#python">Python Code</a>
+    <a href="#library">Core Library</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#analysis">Analysis Scripts</a>
+    <a href="#design">Design Decisions</a>
+    <a href="#latex">Thesis Structure</a>
+    <a href="#results">Key Results</a>
+  </div>
+</nav>
+
+<main>
+<div class="wrapper">
+
+<!-- ═══════════════════════════════════════════════════════════ OVERVIEW -->
+<section id="overview">
+  <h2><span class="num">00</span> Project Overview</h2>
+  <p>
+    This repository contains the full implementation for a Master's thesis on pricing and
+    calibrating <strong>Bitcoin inverse options</strong> using the <strong>rough Bergomi (rBergomi)</strong>
+    stochastic volatility model. The work covers three components:
+  </p>
+  <ul>
+    <li><b>Theoretical:</b> Extending rBergomi (Bayer, Friz &amp; Gatheral 2016) to inverse options — crypto-native derivatives where payoffs are denominated in the underlying asset (BTC).</li>
+    <li><b>Empirical:</b> Calibration on 22 Deribit snapshot dates spanning 2022–2025, across 7 market events (LUNA, FTX, SVB, ETF approval, Halving, BTC $100k, Trump inauguration) and 3 volatility regimes.</li>
+    <li><b>Computational:</b> Three simulation pipelines compared — Cholesky+Euler, Hybrid+Euler (BLP 2017), Hybrid+Mixed Estimator (MP 2018) — with Numba JIT acceleration.</li>
+  </ul>
+
+  <div class="stats">
+    <div class="stat"><div class="val">22</div><div class="lbl">Calibration dates</div></div>
+    <div class="stat"><div class="val">3</div><div class="lbl">Simulation methods</div></div>
+    <div class="stat"><div class="val">57k</div><div class="lbl">Option files (Deribit)</div></div>
+    <div class="stat"><div class="val">~15s</div><div class="lbl">Per-date calibration</div></div>
+    <div class="stat"><div class="val">66</div><div class="lbl">Total calibration runs</div></div>
+    <div class="stat"><div class="val">0.07</div><div class="lbl">Median H (roughness)</div></div>
+  </div>
+
+  <h3>End-to-End Pipeline</h3>
+  <div class="pipeline">
+    <span class="pipe-step">Deribit API</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">deribit_data.py</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">iv_surface_builder.py</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">src/rbergomi/calibrator.py</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">generate_figures.py</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">populate_tables.py</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-step">LaTeX tables &amp; figures</span>
+  </div>
+  <p>All steps accessible via a single CLI entry point: <code>python main_c.py [--flag]</code></p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ PYTHON -->
+<section id="python">
+  <h2><span class="num">01</span> Python Code Architecture</h2>
+
+  <h3>Repository Structure</h3>
+  <pre>
+rBergomi_Bitcoin_Option/
+├── main_c.py                    # Universal CLI dispatcher (50+ flags, interactive menu)
+├── run_all_calibrations.py      # Production calibration: 3 methods × 22 dates
+├── generate_figures.py          # Rebuild publication figures from calibration CSVs
+├── inverse_options.py           # Inverse vs. direct options Greeks comparison
+├── btc_volatility_analysis.py   # BTC return analysis (fat tails, smile, term structure)
+├── iv_surface_builder.py        # IV surface extraction from Deribit parquet data
+├── iv_visualizer.py             # IV surface visualization and Greeks plots
+├── populate_tables.py           # LaTeX table generation from calibration CSVs
+├── compare_h_bounds.py          # H lower-bound sensitivity (0.01 / 0.001 / 1e-4)
+├── residual_analysis.py         # Statistical residual tests (t-test, Wilcoxon)
+├── compare_xi_approaches.py     # Naive vs. bootstrap forward variance curve
+├── fix_calibration_bias.py      # Systematic IV bias analysis &amp; correction study
+├── data_cleaning.py             # Housekeeping utilities
+├── src/
+│   ├── rbergomi/               # Core rBergomi library (see Section 02)
+│   └── config/                 # Calibration settings, dates, plot styles
+└── Requirements.txt</pre>
+
+  <h3>Entry Point: <code>main_c.py</code></h3>
+  <p>A single dispatcher with 50+ CLI flags and an interactive numbered menu. All pipeline steps
+  are accessible without knowing which sub-script to call:</p>
+  <pre>
+# Quick-start examples
+python main_c.py                              # Interactive menu
+python main_c.py --rbergomi-test             # Price one option (Euler vs Mixed)
+python main_c.py --generate-figures --method hybrid_mixed --date 20221109
+python main_c.py --residual-analysis         # t-test + Wilcoxon on all methods
+python main_c.py --compare-h-bounds --method hybrid_mixed
+python main_c.py --thesis-pipeline           # Figures + tables in one shot</pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ LIBRARY -->
+<section id="library">
+  <h2><span class="num">02</span> Core Library: <code>src/rbergomi/</code></h2>
+  <p>Self-contained Python package implementing the rBergomi model for inverse crypto options.
+  Designed to be importable independently of the thesis pipeline.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>pricer.py — rBergomiPricer</h4>
+      <p>Monte Carlo pricer with two fBm simulation schemes:</p>
+      <ul>
+        <li><b>CholeskyScheme:</b> exact covariance matrix factorisation — O(n²) memory</li>
+        <li><b>HybridScheme:</b> kernel decomposition (BLP 2017) — O(n·κ), stable for any n_steps</li>
+      </ul>
+      <p>Pricing methods: log-Euler spot MC <i>or</i> Mixed Estimator (MP 2018, conditional BS — no spot path noise). Numba JIT on hot loops for 10–50× speedup.</p>
+    </div>
+    <div class="card">
+      <h4>calibrator.py — Calibrator</h4>
+      <p>Two-phase optimization for <code>(H, eta, rho)</code>:</p>
+      <ul>
+        <li><b>Phase 1:</b> Differential Evolution (2k paths, global search)</li>
+        <li><b>Phase 2:</b> Nelder-Mead refinement (10k paths, local polish)</li>
+      </ul>
+      <p>Forward variance <code>xi_0(T)</code> is pre-computed from ATM IVs (not a free parameter).
+      Loss function uses maturity-aware weighting (1/√T).</p>
+    </div>
+    <div class="card">
+      <h4>mixed_estimator.py — MixedEstimator</h4>
+      <p>McCrickerd &amp; Pakkanen (2018) variance reduction technique.
+      Prices as conditional Black-Scholes given the variance path, eliminating spot-path Monte Carlo noise.
+      Combined with antithetic sampling: 10–50× effective speed-up vs. plain Euler MC.</p>
+    </div>
+    <div class="card">
+      <h4>utils.py — Utilities</h4>
+      <ul>
+        <li><code>bs_price_inverse_put/call()</code> — Black-Scholes for inverse payoffs (denominated in BTC)</li>
+        <li><code>implied_vol_brent()</code> — IV inversion via Brent's method</li>
+        <li><code>batch_implied_vols()</code> — vectorized IV computation</li>
+        <li>Performance timer and European-number formatting</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>visualizer.py — CalibrationVisualizer</h4>
+      <ul>
+        <li>Smile fit plots (IV by maturity, model vs. market)</li>
+        <li>Residuals heatmap (moneyness × maturity grid)</li>
+        <li>Residuals histogram with normality overlay</li>
+        <li>3D IV surface (matplotlib surface plot)</li>
+        <li>LaTeX table generation from <code>CalibrationResult</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Public API (<code>__init__.py</code>)</h4>
+      <pre style="font-size:0.78rem; margin:0.4rem 0 0;">from src.rbergomi import (
+    rBergomiPricer,
+    Calibrator,
+    CalibrationResult,
+    ForwardVarianceCurve,
+    MixedEstimator,
+    CalibrationVisualizer,
+)</pre>
+    </div>
+  </div>
+
+  <h3>Quick Usage</h3>
+  <pre>
+from src.rbergomi import rBergomiPricer, Calibrator
+
+# Price a single inverse put
+pricer = rBergomiPricer(H=0.07, eta=1.9, rho=-0.7, xi=0.04,
+                        n_paths=20_000, scheme="hybrid", pricing_method="mixed")
+price, std_err = pricer.price_inverse_put(S0=50_000, K=48_000, T=30/365)
+iv = pricer.implied_vol_inverse_put(S0=50_000, K=48_000, T=30/365)
+
+# Calibrate to a market surface
+calibrator = Calibrator(n_paths=10_000, scheme="hybrid", pricing_method="mixed")
+result = calibrator.calibrate_snapshot(builder, target_date, ...)
+print(result)  # CalibrationResult: H, eta, rho, xi_curve, RMSE, quality_flag</pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ PIPELINE -->
+<section id="pipeline">
+  <h2><span class="num">03</span> Production Pipeline Scripts</h2>
+
+  <table>
+    <thead>
+      <tr><th>Script</th><th>Purpose</th><th>Key Output</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>run_all_calibrations.py</code></td><td>Run all 3 methods × 22 dates calibration (~2–3 hours). Supports <code>--cholesky</code>, <code>--hybrid-euler</code>, <code>--hybrid-mixed</code> flags.</td><td><code>Results/calibration/tables/{method}/</code></td></tr>
+      <tr><td><code>generate_figures.py</code></td><td>Rebuild 4 figure types per (date, method) from saved CSVs. Fast: no re-calibration needed.</td><td><code>Results/calibration/figures/{method}/</code></td></tr>
+      <tr><td><code>inverse_options.py</code></td><td>Greeks comparison between direct and inverse options (Delta, Gamma, Vega). Didactic payoff decomposition (Alexander et al. 2023).</td><td><code>Results/inverse_options/</code></td></tr>
+      <tr><td><code>btc_volatility_analysis.py</code></td><td>BTC return characterisation: fat tails (Student-t fit), IV smile evolution, term structure, fBm sample paths.</td><td><code>Results/fat_tails_kurtosis/</code> etc.</td></tr>
+      <tr><td><code>iv_surface_builder.py</code></td><td>Build Polars index over 57k Deribit parquet files. Extract IV surfaces for any date window. Export to calibration format.</td><td><code>data/option_index.parquet</code></td></tr>
+      <tr><td><code>populate_tables.py</code></td><td>Read calibration CSVs → generate 12 LaTeX <code>.tex</code> table files for direct <code>\input{}</code> in thesis.</td><td><code>Results/calibration/latex_tables/</code></td></tr>
+      <tr><td><code>deribit_data.py</code></td><td>Async downloader: fetches all BTC option trades 2022–2025 from Deribit REST API. ~2–4 hours. See README for setup.</td><td><code>data/option/*.parquet</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Three Simulation Methods Compared</h3>
+  <div class="method-grid">
+    <div class="method-card">
+      <h5>Cholesky + Euler</h5>
+      <p>Exact fBm simulation via covariance matrix factorisation. Baseline reference. Diverges for n_steps &gt; 50.</p>
+    </div>
+    <div class="method-card">
+      <h5>Hybrid + Euler</h5>
+      <p>Kernel decomposition (BLP 2017). Stable for any n_steps. Better speed/accuracy trade-off than Cholesky.</p>
+    </div>
+    <div class="method-card best">
+      <h5>Hybrid + Mixed ✓ Best</h5>
+      <p>Mixed Estimator (MP 2018) on top of Hybrid fBm. Lowest RMSE, fastest convergence. Selected as primary method.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ ANALYSIS -->
+<section id="analysis">
+  <h2><span class="num">04</span> Statistical Analysis Scripts</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>compare_h_bounds.py</h4>
+      <p>Sensitivity analysis of the Hurst parameter lower bound. Compares H ∈ {0.01, 0.001, 1e-4} across all methods and dates.</p>
+      <ul>
+        <li>Loads CSV tables from each H-bound variant</li>
+        <li>Computes parameter shift (ΔH, Δeta, Δrho) and RMSE change</li>
+        <li>Prints per-date comparison tables</li>
+      </ul>
+      <p><code>python main_c.py --compare-h-bounds [--method M]</code></p>
+    </div>
+    <div class="card">
+      <h4>residual_analysis.py</h4>
+      <p>Formal statistical tests of calibration residuals to validate model fit.</p>
+      <ul>
+        <li>Re-runs pricer with calibrated parameters to get per-point model IVs</li>
+        <li>One-sample t-test: H₀: mean(residuals) = 0</li>
+        <li>Wilcoxon signed-rank: H₀: median(residuals) = 0 (non-parametric)</li>
+        <li>Reports bias_pp per date for all 3 methods</li>
+      </ul>
+      <p><code>python main_c.py --residual-analysis [--method M]</code></p>
+    </div>
+    <div class="card">
+      <h4>compare_xi_approaches.py</h4>
+      <p>Compares two approaches for the forward variance curve xi_0(t):</p>
+      <ul>
+        <li><b>Naive:</b> xi_0(T_k) = sigma_ATM(T_k)² — biased upward</li>
+        <li><b>Bootstrap:</b> solves E_Q[V_T] = xi_0(T) iteratively — unbiased</li>
+      </ul>
+      <p>Generates IV surface comparisons, bias-by-maturity plots, and speed benchmarks.</p>
+      <p><code>python main_c.py --compare-xi [--method M]</code></p>
+    </div>
+    <div class="card">
+      <h4>fix_calibration_bias.py</h4>
+      <p>Deep-dive into the systematic upward IV bias arising from naive xi_0(t) initialization. Proposes and tests a bootstrap correction that solves E_Q[V_T] = xi_0(T) numerically. Includes cross-method summary plots.</p>
+      <p><code>python main_c.py --fix-bias [--method M]</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ DESIGN -->
+<section id="design">
+  <h2><span class="num">05</span> Key Design Decisions</h2>
+
+  <div class="decision">
+    <strong>xi is a pre-computed curve, not an optimizer parameter.</strong>
+    The forward variance xi_0(T_k) is extracted from ATM IVs before optimization. This reduces the optimizer's search space from 4 to 3 parameters (H, eta, rho) and avoids degeneracy between xi and eta. Class: <code>ForwardVarianceCurve</code> in <code>calibrator.py</code>.
+  </div>
+  <div class="decision">
+    <strong>H is always jointly optimized.</strong>
+    The thesis does not fix H at a prior value. All three parameters (H, eta, rho) are jointly estimated via DE + Nelder-Mead on each snapshot surface. This avoids identification bias.
+  </div>
+  <div class="decision">
+    <strong>ATM identification uses delta-neutral (d1 ≈ 0), not moneyness ≈ 1.</strong>
+    For inverse options the ATM point shifts with IV level. Using d1 = 0 ensures the ATM IV extraction is model-consistent and avoids a systematic bias in xi_0(T).
+  </div>
+  <div class="decision">
+    <strong>Loss function weights by maturity (1/√T).</strong>
+    Short-dated options constrain eta and rho more strongly (higher vega sensitivity). Down-weighting long-dated options prevents the optimizer from ignoring the near-term smile shape.
+  </div>
+  <div class="decision">
+    <strong>Hybrid + Mixed Estimator selected as primary method.</strong>
+    Hybrid scheme is numerically stable for any n_steps (Cholesky diverges for n_steps &gt; n_coarse). Mixed Estimator eliminates spot-path MC noise, giving 10–50× speed-up over Euler MC for the same RMSE target.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ LATEX -->
+<section id="latex">
+  <h2><span class="num">06</span> Thesis Structure (LaTeX)</h2>
+  <p>The thesis (<a href="Tesi_Magistrale_rBergomi.pdf">Tesi_Magistrale_rBergomi.pdf</a>) is organized in three chapters.</p>
+
+  <h3>Chapter 1 — Cryptocurrency Derivatives &amp; Inverse Options</h3>
+  <ul>
+    <li>Bitcoin as a financial asset: stylized facts, fat tails, excess kurtosis (Student-t fit to log-returns)</li>
+    <li>Deribit exchange and BTC option market structure</li>
+    <li>Inverse options: payoff = max(1/K − 1/S_T, 0) in BTC. Pricing: Black-Scholes in BTC numéraire.</li>
+    <li>Greeks of inverse options vs. direct options: Delta, Gamma sign reversal; Vega asymmetry. Based on Alexander, Imeraj &amp; Tarim (2023).</li>
+    <li>IV surface characteristics: steep put skew, short-dated term structure inversion during crypto stress events</li>
+  </ul>
+
+  <h3>Chapter 2 — Rough Volatility &amp; rBergomi Model</h3>
+  <ul>
+    <li>From BSM to stochastic volatility: motivation via volatility smile and term structure</li>
+    <li>Rough volatility: Gatheral et al. (2018) — empirical evidence that H ≈ 0.1 in realized volatility data</li>
+    <li>rBergomi model: V_t = ξ₀(t)·exp(η·Z^H_t − ½η²·t^{2H}), Z^H fractional BM with Hurst H</li>
+    <li>Simulation schemes: exact Cholesky vs. Hybrid kernel decomposition (Bayer, Lux &amp; Pakkanen 2017)</li>
+    <li>Mixed Estimator / Turbocharging: McCrickerd &amp; Pakkanen (2018) variance reduction for inverse options</li>
+    <li>Forward variance curve ξ₀(t): relationship to ATM IVs, bootstrap construction</li>
+  </ul>
+
+  <h3>Chapter 3 — Empirical Calibration on Bitcoin Options</h3>
+  <ul>
+    <li>Data: Deribit BTC inverse options, 22 snapshot dates, 2022–2025</li>
+    <li>Calibration events: LUNA collapse (May 2022), FTX (Nov 2022), SVB (Mar 2023), BTC ETF approval (Jan 2024), Fourth Halving (Apr 2024), BTC $100k (Dec 2024), Trump Crypto EO (Jan 2025)</li>
+    <li>Baseline regimes: 3 dates each for low / medium / high ATM IV</li>
+    <li>Calibration methodology: DE (coarse, 2k paths) + Nelder-Mead (fine, 10k paths). Quality flags: good / acceptable / borderline / poor.</li>
+    <li>Three method comparison: Cholesky+Euler vs. Hybrid+Euler vs. Hybrid+Mixed (RMSE, speed, parameter stability)</li>
+    <li>Statistical validation: t-test and Wilcoxon signed-rank on calibration residuals</li>
+    <li>H sensitivity: lower-bound analysis (0.01 / 0.001 / 1e-4)</li>
+  </ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ RESULTS -->
+<section id="results">
+  <h2><span class="num">07</span> Key Empirical Results</h2>
+
+  <h3>Calibrated Parameters (Hybrid + Mixed, 22 dates)</h3>
+  <table>
+    <thead>
+      <tr><th>Parameter</th><th>Typical Range</th><th>Interpretation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>H (Hurst)</b></td><td>0.05 – 0.15, median ≈ 0.07</td><td>Consistently rough (H ≪ 0.5). BTC variance paths are non-differentiable, consistent with rough volatility literature.</td></tr>
+      <tr><td><b>η (vol-of-vol)</b></td><td>1.5 – 2.5 (stress up to 3.0)</td><td>High vol-of-vol vs. equities (typically 0.5–1.5), reflecting BTC's extreme IV fluctuations.</td></tr>
+      <tr><td><b>ρ (spot-vol corr)</b></td><td>−0.60 to −0.80</td><td>Strong negative correlation drives the pronounced left skew in BTC IVs — "fear of crash" premium.</td></tr>
+      <tr><td><b>RMSE</b></td><td>1.5 – 4.0 pp (good: &lt; 2pp)</td><td>Model fits well across regimes. Largest errors on short-dated, extreme-event surfaces (FTX: ~3.5 pp).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Method Comparison Summary</h3>
+  <table>
+    <thead>
+      <tr><th>Method</th><th>RMSE (median)</th><th>Speed / date</th><th>n_steps stability</th><th>Verdict</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Cholesky + Euler</td><td>~2.2 pp</td><td>~25s</td><td>Diverges n_steps &gt; 50</td><td>Baseline only</td></tr>
+      <tr><td>Hybrid + Euler</td><td>~2.1 pp</td><td>~18s</td><td>Stable ✓</td><td>Good alternative</td></tr>
+      <tr><td><b>Hybrid + Mixed</b></td><td><b>~1.9 pp</b></td><td><b>~12s</b></td><td><b>Stable ✓</b></td><td><b>Recommended ✓</b></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Event Highlights</h3>
+  <ul>
+    <li><b>FTX Collapse (2022-11-09):</b> H drops to ~0.05, η spikes to ~3.0, ρ ≈ −0.82. Largest calibration challenge; RMSE ~3.5 pp.</li>
+    <li><b>ETF Approval (2024-01-10):</b> H rises to ~0.12 (less rough), positive skew inversion partially. η ~1.6.</li>
+    <li><b>BTC $100k (2024-12-05):</b> Low ATM IV (baseline-like), H ~0.08, very stable calibration.</li>
+    <li><b>Low-IV baseline:</b> Best calibration quality (RMSE &lt; 1.8 pp), confirming rBergomi fits quiet markets well.</li>
+  </ul>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrapper">
+    <p>Riccardo Vignato — University of Padova, MSc Quantitative Finance, 2026</p>
+    <p style="margin-top:0.3rem">
+      <a href="https://github.com/RVJIM/rBegromi_Bitcoin_Option">GitHub Repository</a> ·
+      <a href="Tesi_Magistrale_rBergomi.pdf">Thesis PDF</a> ·
+      <a href="mailto:riccardocaruso132@gmail.com">Contact</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

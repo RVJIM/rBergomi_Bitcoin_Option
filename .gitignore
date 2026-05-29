@@ -28,6 +28,30 @@ figures/
 # Loose root-level artifacts
 btc_vs_rv_b.png
 
+# Raw data (2.1 GB, download via Deribit API — see README)
+data/
+
+# Legacy / intermediate result directories
+comparison/
+Results/calibration/figures/cholesky_euler/
+Results/calibration/figures/hybrid_euler/
+Results/calibration/figures/blp2017/
+Results/calibration/figures/hybrid/
+Results/calibration/figures/mp2018/
+Results/calibration/figures/rbergomi/
+Results/calibration/tables/cholesky_euler_h001/
+Results/calibration/tables/cholesky_euler_hfree/
+Results/calibration/tables/hybrid_euler_h001/
+Results/calibration/tables/hybrid_euler_hfree/
+Results/calibration/tables/hybrid_euler_wide_h/
+Results/calibration/tables/hybrid_mixed_h001/
+Results/calibration/tables/hybrid_mixed_hfree/
+Results/calibration/tables/hybrid_mixed_wide_h/
+Results/calibration/h_bound_comparison/
+Results/calibration/residuals/
+Results/fix_bias/
+Results/xi_comparison/
+
 # Python
 __pycache__/
 *.pyc

@@ -66,8 +66,16 @@ Thesis Post-Calibration Pipeline (Chapter 3):
     python main_c.py --generate-figures --method hybrid_mixed --date 20220509   # Single method/date
     python main_c.py --populate-tables      # Generate all LaTeX .tex table files
 
-    --method cholesky_euler|hybrid_euler|hybrid_mixed|all  # Filter for --generate-figures (default: all)
+    --method cholesky_euler|hybrid_euler|hybrid_mixed|all  # Filter for --generate-figures / analysis (default: all)
     --date YYYYMMDD                                        # Date filter for --generate-figures
+
+Statistical Analysis:
+    python main_c.py --compare-h-bounds                          # H-bound sensitivity (all methods)
+    python main_c.py --compare-h-bounds --method hybrid_mixed    # Single method
+    python main_c.py --residual-analysis                         # t-test + Wilcoxon signed-rank (all methods)
+    python main_c.py --residual-analysis --method hybrid_euler   # Single method
+    python main_c.py --compare-xi                                # Naive vs. bootstrap xi_0(t)
+    python main_c.py --fix-bias                                  # Calibration bias analysis & correction
 
 ================================================================================
 STRUCTURE AND DEPENDENCIES
@@ -121,10 +129,16 @@ main_c.py (this file)
     |   |-- --populate-tables     --> populate_tables.py
     |
     |-- DATA CLEANUP --> data_cleaning.py
-        |-- --clean-status        --> run_show_status()
-        |-- --clean-temp          --> run_clean_temp()
-        |-- --clean-results       --> run_clean_results()
-        |-- --clean-all           --> run_clean_all()
+    |   |-- --clean-status        --> run_show_status()
+    |   |-- --clean-temp          --> run_clean_temp()
+    |   |-- --clean-results       --> run_clean_results()
+    |   |-- --clean-all           --> run_clean_all()
+    |
+    |-- STATISTICAL ANALYSIS
+        |-- --compare-h-bounds    --> compare_h_bounds.py  [--method]
+        |-- --residual-analysis   --> residual_analysis.py [--method]
+        |-- --compare-xi          --> compare_xi_approaches.py [--method]
+        |-- --fix-bias            --> fix_calibration_bias.py [--method]
 
 GENERATED OUTPUT (in Results/):
     - fat_tails_kurtosis/        <-- btc_volatility_analysis.py (--vol-kurtosis)
@@ -1593,6 +1607,11 @@ def interactive_menu():
     print("  24. Generate IV plots")
     print("  25. Generate IV surface animations (GIFs)")
     print("  26. Delta plots only (quick test)")
+    print("\n  --- Statistical Analysis ---")
+    print("  32. H-bounds sensitivity comparison (0.01 / 0.001 / 1e-4)")
+    print("  33. Residual analysis (t-test + Wilcoxon signed-rank)")
+    print("  34. Xi approaches comparison (naive vs. bootstrap)")
+    print("  35. Calibration bias analysis & correction")
     print("\n  --- Maintenance ---")
     print("  27. Run calibration (legacy)")
     print("  28. Show file/folder status")
@@ -1601,7 +1620,7 @@ def interactive_menu():
     print("  31. Full cleanup")
     print("\n   0. Exit\n")
 
-    choice = input("Choice [0-31]: ").strip()
+    choice = input("Choice [0-35]: ").strip()
 
     # --- Data & Pipeline ---
     if choice == "1":
@@ -1693,6 +1712,15 @@ def interactive_menu():
     elif choice == "31":
         from data_cleaning import run_clean_all
         run_clean_all()
+    # --- Statistical Analysis ---
+    elif choice == "32":
+        _run_compare_h_bounds()
+    elif choice == "33":
+        _run_residual_analysis()
+    elif choice == "34":
+        _run_compare_xi()
+    elif choice == "35":
+        _run_fix_bias()
     elif choice == "0":
         print("Goodbye!")
         sys.exit(0)
@@ -1788,9 +1816,19 @@ Examples:
     parser.add_argument("--thesis-pipeline", action="store_true",
                         help="Run full post-calibration thesis pipeline: check-iv + generate-figures + populate-tables")
     parser.add_argument("--method", choices=["cholesky_euler", "hybrid_euler", "hybrid_mixed", "all"],
-                        default="all", help="Method filter for --generate-figures (default: all)")
+                        default="all", help="Method filter for --generate-figures / analysis commands (default: all)")
     parser.add_argument("--date", default=None,
                         help="Date filter for --generate-figures (YYYYMMDD, default: all dates)")
+
+    # Statistical Analysis (Chapter 3 supplementary)
+    parser.add_argument("--compare-h-bounds", action="store_true",
+                        help="Compare calibration across H lower bounds (0.01, 0.001, 1e-4)")
+    parser.add_argument("--residual-analysis", action="store_true",
+                        help="Statistical residual analysis: t-test + Wilcoxon signed-rank")
+    parser.add_argument("--compare-xi", action="store_true",
+                        help="Compare naive vs. bootstrap forward variance curve (xi approaches)")
+    parser.add_argument("--fix-bias", action="store_true",
+                        help="Analyze and correct systematic bias in calibrated IVs")
 
     args = parser.parse_args()
     
@@ -1928,6 +1966,16 @@ Examples:
     elif args.populate_tables:
         _run_populate_tables()
 
+    # Statistical Analysis
+    elif args.compare_h_bounds:
+        _run_compare_h_bounds(method=args.method)
+    elif args.residual_analysis:
+        _run_residual_analysis(method=args.method)
+    elif args.compare_xi:
+        _run_compare_xi(method=args.method)
+    elif args.fix_bias:
+        _run_fix_bias(method=args.method)
+
 
 def _run_check_iv():
     """Verify ATM IV regime classification for baseline dates."""
@@ -1996,6 +2044,74 @@ def _run_thesis_pipeline(method: str = "all", date_filter: str = None):
     logger.info("  Figures  -> Results/calibration/figures/{method}/")
     logger.info("  Tables   -> Results/calibration/latex_tables/")
     logger.info("="*60)
+
+
+def _run_compare_h_bounds(method: str = None):
+    """Compare calibration results across H lower bounds (0.01, 0.001, 1e-4)."""
+    logger.info("="*60)
+    logger.info("COMPARE H BOUNDS — Sensitivity Analysis")
+    logger.info("="*60)
+    import subprocess, sys
+    cmd = [sys.executable, "compare_h_bounds.py"]
+    if method and method != "all":
+        cmd += ["--method", method]
+    logger.info(f"Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, check=False)
+    if result.returncode != 0:
+        logger.error("compare_h_bounds.py exited with errors.")
+    else:
+        logger.info("H-bounds comparison complete.")
+
+
+def _run_residual_analysis(method: str = None):
+    """Statistical analysis of calibration residuals (t-test, Wilcoxon signed-rank)."""
+    logger.info("="*60)
+    logger.info("RESIDUAL ANALYSIS — Statistical Tests")
+    logger.info("="*60)
+    import subprocess, sys
+    cmd = [sys.executable, "residual_analysis.py"]
+    if method and method != "all":
+        cmd += ["--method", method]
+    logger.info(f"Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, check=False)
+    if result.returncode != 0:
+        logger.error("residual_analysis.py exited with errors.")
+    else:
+        logger.info("Residual analysis complete.")
+
+
+def _run_compare_xi(method: str = None):
+    """Compare naive vs. bootstrap forward variance curve approaches."""
+    logger.info("="*60)
+    logger.info("COMPARE XI APPROACHES — Forward Variance Curve")
+    logger.info("="*60)
+    import subprocess, sys
+    cmd = [sys.executable, "compare_xi_approaches.py"]
+    if method and method != "all":
+        cmd += ["--method", method]
+    logger.info(f"Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, check=False)
+    if result.returncode != 0:
+        logger.error("compare_xi_approaches.py exited with errors.")
+    else:
+        logger.info("Xi comparison complete.")
+
+
+def _run_fix_bias(method: str = None):
+    """Analyze and correct systematic calibration bias in rBergomi IVs."""
+    logger.info("="*60)
+    logger.info("FIX CALIBRATION BIAS — Bias Analysis & Correction")
+    logger.info("="*60)
+    import subprocess, sys
+    cmd = [sys.executable, "fix_calibration_bias.py"]
+    if method and method != "all":
+        cmd += ["--method", method]
+    logger.info(f"Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, check=False)
+    if result.returncode != 0:
+        logger.error("fix_calibration_bias.py exited with errors.")
+    else:
+        logger.info("Bias analysis complete.")
 
 
 if __name__ == "__main__":
