@@ -298,10 +298,6 @@ def plot_residuals_hist(
     ax.set_xlabel("Model IV − Market IV (pp)")
     ax.set_ylabel("Density")
     ax.set_title(f"Residuals: {METHOD_LABELS[method]}  —  {date_str[:4]}-{date_str[4:6]}-{date_str[6:]}")
-    mu, sd = np.nanmean(resid), np.nanstd(resid)
-    ax.text(0.97, 0.95, f"$\\mu$={mu:.2f}pp\n$\\sigma$={sd:.2f}pp",
-            transform=ax.transAxes, ha="right", va="top", fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.7))
     fig.tight_layout()
     fname = out_dir / f"residuals_hist_{date_str}_{method}.png"
     fig.savefig(fname, dpi=150, bbox_inches="tight")

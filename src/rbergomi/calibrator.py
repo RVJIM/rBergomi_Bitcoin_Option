@@ -181,7 +181,8 @@ class CalibrationResult:
         spot: Optional[float] = None,
         success: bool = True,
         method: str = "",
-        details: Optional[Dict] = None
+        details: Optional[Dict] = None,
+        bias: Optional[float] = None,
     ):
         self.H = H
         self.eta = eta
@@ -189,6 +190,7 @@ class CalibrationResult:
         self.xi = xi
         self.rmse = rmse
         self.mae = mae
+        self.bias = bias  # mean(model_IV - market_IV) in pp; None if not computed
         self.n_points = n_points
         self.n_evals = n_evals
         self.elapsed_seconds = elapsed_seconds
@@ -254,6 +256,7 @@ class CalibrationResult:
             "sigma_atm": self.sigma_atm,
             "rmse_pp": self.rmse,
             "mae_pp": self.mae,
+            "bias_pp": self.bias,
             "n_points": self.n_points,
             "n_evals": self.n_evals,
             "time_seconds": self.elapsed_seconds,
@@ -895,6 +898,7 @@ class Calibrator:
             H=H_opt, eta=eta_opt, rho=rho_opt, xi=xi_repr,
             rmse=final_loss["rmse"],
             mae=final_loss["mae"],
+            bias=final_loss.get("bias"),
             n_points=n_points,
             n_evals=self._eval_count,
             elapsed_seconds=elapsed,
@@ -1081,6 +1085,7 @@ class Calibrator:
                 H=H_opt, eta=eta_opt, rho=rho_opt, xi=xi_0,
                 rmse=final_loss["rmse"],
                 mae=final_loss["mae"],
+                bias=final_loss.get("bias"),
                 n_points=n_slice,
                 n_evals=self._eval_count,
                 elapsed_seconds=elapsed,

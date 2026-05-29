@@ -217,42 +217,100 @@ class ComparisonAnalyzer:
         self._save_fig(fig, 'delta_call_direct_vs_inverse')
 
     def plot_put_delta(self):
-        """Figure: Put Delta - Direct vs Inverse"""
+        """Figure 1.5: Put option prices and delta comparison (S on x-axis, K fixed).
+
+        Reproduces Figure 1.5 of the thesis: panel (a) shows P^USD and P^BTC as
+        functions of the spot price S; panel (b) compares Delta^USD (bounded at -1)
+        with Delta^BTC (which diverges as S -> 0), making the hedging asymmetry
+        immediately visible.
+        """
+        K      = 50_000
+        sigma  = 0.60
+        T      = 0.25       # 3 months
+        r      = 0.0
+        S_arr  = np.linspace(20_000, 100_000, 500)
+        scale  = 1e5        # multiply Delta^BTC so it is visible next to Delta^USD
+
+        # ── Prices ─────────────────────────────────────────────────────────
+        p_usd   = direct_put_price(S_arr, K, T, r, sigma)          # USD
+        p_btc   = p_usd / S_arr                                     # BTC
+
+        # ── Deltas ─────────────────────────────────────────────────────────
+        d_usd   = direct_put_delta(S_arr, K, r, sigma, T)           # USD delta
+        d_btc   = inverse_put_delta_from_price(S_arr, K, T, r, sigma)  # BTC delta
+
+        sigma_pct = int(sigma * 100)
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-        # Panel A: Direct Put Delta
-        ax1 = axes[0]
-        for tau, label, ls, lw in zip(self.taus, self.tau_labels, self.linestyles, self.linewidths):
-            delta_vals = direct_put_delta(self.S, self.K_range, self.r, self.sigma, tau)
-            ax1.plot(self.K_range/1000, delta_vals, color=PALETTE['primary'], linestyle=ls, linewidth=lw, label=label)
+        # ── Panel (a): Prices ───────────────────────────────────────────────
+        ax1   = axes[0]
+        ax1_r = ax1.twinx()
 
-        ax1.set_xlabel(r'Strike $K$ (thousands USD)')
-        ax1.set_ylabel(r'Delta $\delta$')
-        ax1.set_title(r'Direct Put Delta: $\frac{\partial P^{\$}}{\partial S}$')
-        ax1.legend(loc='lower right', title='Maturity')
-        ax1.set_xlim([10, 40])
-        ax1.set_ylim([-2, 0.5])
+        ax1.plot(S_arr / 1000, p_usd / 1000,
+                 color=PALETTE['primary'], linewidth=2.5,
+                 label=r'Standard Put $P^{USD}$ (thousands USD)')
+        ax1_r.plot(S_arr / 1000, p_btc,
+                   color=PALETTE['tertiary'], linewidth=2.5, linestyle='--',
+                   label=r'Inverse Put $P^{BTC}$ (BTC)')
+
+        ax1.axvline(x=K / 1000, color=PALETTE['neutral'],
+                    linestyle='--', alpha=0.6, linewidth=1.2)
+        ax1.text(K / 1000 + 0.8, (p_usd / 1000).max() * 0.55,
+                 f'Strike K = ${K//1000}K',
+                 fontsize=9, color=PALETTE['neutral'])
+
+        ax1.set_xlabel(r'Spot Price $S$ (thousands USD)')
+        ax1.set_ylabel(r'$P^{USD}$ (thousands USD)', color=PALETTE['primary'])
+        ax1_r.set_ylabel(r'$P^{BTC}$ (BTC)',          color=PALETTE['tertiary'])
+        ax1.set_title(f'(a) Put Option Prices ($\\sigma={sigma_pct}\\%$, $T={T}$y)')
+        ax1.set_xlim([20, 100])
         ax1.grid(True, alpha=0.3)
-        ax1.axhline(y=0, color='black', linewidth=0.5)
-        ax1.axvline(x=self.S/1000, color=PALETTE['neutral'], linestyle='--', alpha=0.5)
 
-        # Panel B: Inverse Put Delta
+        lines1, labels1 = ax1.get_legend_handles_labels()
+        lines2, labels2 = ax1_r.get_legend_handles_labels()
+        ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper right', fontsize=9)
+
+        # ── Panel (b): Deltas ───────────────────────────────────────────────
         ax2 = axes[1]
-        for tau, label, ls, lw in zip(self.taus, self.tau_labels, self.linestyles, self.linewidths):
-            delta_vals = inverse_put_delta(self.S, self.K_range, self.r, self.r_btc, self.sigma, tau)
-            ax2.plot(self.K_range/1000, delta_vals, color=PALETTE['tertiary'], linestyle=ls, linewidth=lw, label=label)
 
-        ax2.set_xlabel(r'Strike $K$ (thousands USD)')
-        ax2.set_ylabel(r'Delta $\delta$')
-        ax2.set_title(r'Inverse Put Delta: $\frac{\partial P^{\mathbb{B}}}{\partial S}$')
-        ax2.legend(loc='lower right', title='Maturity')
-        ax2.set_xlim([10, 40])
-        ax2.set_ylim([-2, 0.5])
+        ax2.plot(S_arr / 1000, d_usd,
+                 color=PALETTE['primary'], linewidth=2.5,
+                 label=r'Standard Put: $\Delta^{USD} = N(d_1) - 1$')
+        ax2.plot(S_arr / 1000, d_btc * scale,
+                 color=PALETTE['tertiary'], linewidth=2.5, linestyle='--',
+                 label=r'Inverse Put: $\Delta^{BTC} \times 10^5$')
+
+        ax2.axvline(x=K / 1000, color=PALETTE['neutral'],
+                    linestyle='--', alpha=0.6, linewidth=1.2)
+        ax2.axhline(y=-1, color=PALETTE['neutral'],
+                    linestyle=':', alpha=0.5, linewidth=1.0)
+
+        ax2.set_xlabel(r'Spot Price $S$ (thousands USD)')
+        ax2.set_ylabel('Delta')
+        ax2.set_title(f'(b) Put Option Delta ($\\sigma={sigma_pct}\\%$, $T={T}$y)')
+        ax2.legend(loc='lower right', fontsize=9)
+        ax2.set_xlim([20, 100])
         ax2.grid(True, alpha=0.3)
-        ax2.axhline(y=0, color='black', linewidth=0.5)
-        ax2.axvline(x=self.S/1000, color=PALETTE['neutral'], linestyle='--', alpha=0.5)
 
-        plt.tight_layout()
+        # Arrow annotation pointing to the diverging inverse delta
+        idx = 15                              # S ≈ 23 K
+        ax2.annotate(
+            r'$\Delta^{BTC}$ diverges as $S \to 0$',
+            xy=(S_arr[idx] / 1000, d_btc[idx] * scale),
+            xytext=(38, d_btc[idx] * scale * 0.65),
+            arrowprops=dict(arrowstyle='->', color=PALETTE['neutral'], lw=1.3),
+            fontsize=9,
+            bbox=dict(boxstyle='round,pad=0.3',
+                      facecolor='white', edgecolor=PALETTE['neutral'], alpha=0.85),
+        )
+
+        fig.subplots_adjust(wspace=0.45)
+
+        # Save to LaTeX folder (used directly by the thesis)
+        latex_path = Path("LaTeX/Graphs Chapter 1 & 2") / "fig3_delta_put_BS.png"
+        fig.savefig(latex_path, bbox_inches='tight', facecolor='white', dpi=300)
+
+        # Save to Results folder and close
         self._save_fig(fig, 'fig3_delta_put_BS')
 
     def plot_call_gamma(self):

@@ -21,9 +21,9 @@ docs/
 *.out
 *.log
 
-# Empty result folders
-calibration_results/
-figures/
+# Empty result folders (root-level only)
+/calibration_results/
+/figures/
 
 # Loose root-level artifacts
 btc_vs_rv_b.png
@@ -32,7 +32,7 @@ btc_vs_rv_b.png
 data/
 
 # Legacy / intermediate result directories
-comparison/
+/comparison/
 Results/calibration/figures/cholesky_euler/
 Results/calibration/figures/hybrid_euler/
 Results/calibration/figures/blp2017/

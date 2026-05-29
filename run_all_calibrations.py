@@ -183,10 +183,42 @@ def save_csv(result_dict, date_str, method_name):
 
 
 # ── Generic model runner ─────────────────────────────────────────────────────
-def run_method(method_name, method_cfg, builder, snapshot_dates):
-    """Run one calibration method across all snapshot dates."""
+def run_method(method_name, method_cfg, builder, snapshot_dates, h_lb: float = 0.01):
+    """
+    Run one calibration method across all snapshot dates.
+
+    Parameters
+    ----------
+    h_lb : float
+        Lower bound for H.  Typical values:
+            0.01  — default (conservative, avoids extreme roughness)
+            0.001 — wide-H sensitivity analysis
+            0.0   — no effective lower bound (H free down to near 0)
+        Results are saved in a subfolder whose suffix encodes the bound:
+            0.01  → <method>              (no suffix)
+            0.001 → <method>_h001
+            0.0   → <method>_hfree
+    """
     label    = method_cfg.pop("label")
     maxiter  = method_cfg.pop("maxiter")
+
+    # ── Determine H bounds and output-folder suffix ──────────────────────────
+    # *** THIS IS THE SINGLE PLACE TO CHANGE THE H LOWER BOUND ***
+    # Pass a different --h-lb value on the command line (see argparse below).
+    if abs(h_lb - 1e-4) < 1e-9:
+        h_bounds_override = {"H": (1e-4, 0.49)}
+        suffix = "_hfree"
+        logger.info("  [hfree mode] H bounds: (1e-4, 0.49)")
+    elif abs(h_lb - 0.001) < 1e-9:
+        h_bounds_override = {"H": (0.001, 0.49)}
+        suffix = "_h001"
+        logger.info("  [wide-H mode] H bounds: (0.001, 0.49)")
+    else:
+        h_bounds_override = None   # uses DEFAULT_BOUNDS from calibrator.py (0.01)
+        suffix = ""
+        logger.info("  [default H] H bounds: (0.01, 0.49)")
+
+    method_name = method_name + suffix
 
     logger.info("\n" + "=" * 70)
     logger.info(f"  METHOD: {label}")
@@ -217,6 +249,7 @@ def run_method(method_name, method_cfg, builder, snapshot_dates):
                 maxiter=maxiter,
                 tol=0.5,
                 date=dt,
+                bounds=h_bounds_override,
             )
             elapsed = time.perf_counter() - t0
             logger.info(f"  H={result.H:.4f}  eta={result.eta:.3f}  "
@@ -258,7 +291,29 @@ if __name__ == "__main__":
                         help="Run Hybrid+Mixed only")
     parser.add_argument("--check-iv", action="store_true",
                         help="Only verify baseline ATM-IV regime classification, then exit")
+    parser.add_argument(
+        "--h-lb", type=str, default="0.01",
+        choices=["0.01", "0.001", "1e-4"],
+        help=(
+            "Lower bound for the Hurst exponent H during calibration.\n"
+            "  0.01  — default, conservative (results in tables/<method>/)\n"
+            "  0.001 — wide-H sensitivity  (results in tables/<method>_h001/)\n"
+            "  1e-4  — minimal lower bound (results in tables/<method>_hfree/)\n"
+            "The upper bound is always 0.49."
+        ),
+    )
+    # Keep --wide-h as a legacy alias for --h-lb 0.001
+    parser.add_argument("--wide-h", action="store_true",
+                        help="Legacy alias for --h-lb 0.001 (kept for backward compat).")
     args = parser.parse_args()
+
+    # Resolve h_lb value
+    if args.wide_h:
+        h_lb_value = 0.001
+    elif args.h_lb == "1e-4":
+        h_lb_value = 1e-4
+    else:
+        h_lb_value = float(args.h_lb)
 
     # If no flags, run all
     run_all = not (args.cholesky or args.hybrid_euler or args.hybrid_mixed)
@@ -310,7 +365,7 @@ if __name__ == "__main__":
         logger.info(f"\n[Step {step_i}] Running {method_name}...")
         cfg = METHODS[method_name].copy()  # copy so pop() doesn't mutate
         all_results[method_name] = run_method(
-            method_name, cfg, builder, snapshot_dates
+            method_name, cfg, builder, snapshot_dates, h_lb=h_lb_value
         )
 
     # ── Summary ──────────────────────────────────────────────────────────────
