@@ -13,6 +13,9 @@ docs/
 *.pptx
 *.xlsx
 
+# PDFs (thesis output, reference papers — not tracked)
+*.pdf
+
 # Markdown (except README)
 *.md
 !README.md

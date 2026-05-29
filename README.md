@@ -7,7 +7,7 @@
 
 This repository contains the full Python implementation for the pricing and calibration of **Bitcoin inverse options** using the **rough Bergomi (rBergomi) model**.
 
-Bitcoin options on Deribit are *inverse* contracts: premiums and payoffs are denominated in BTC, not USD. This introduces non-trivial pricing adjustments compared to standard equity options. The rBergomi model — a stochastic volatility model driven by fractional Brownian motion — is calibrated to market-implied volatility surfaces extracted from Deribit trade data across 22 dates spanning 2022–2025, covering major market events (LUNA collapse, FTX bankruptcy, BTC spot ETF approval, Bitcoin halving, BTC $100k, Trump inauguration) and baseline volatility regimes (low, medium, high IV).
+Bitcoin options on Deribit are *inverse* contracts: premiums and payoffs are denominated in BTC, not USD. This introduces non-trivial pricing adjustments compared to standard equity options. The rBergomi model — a stochastic volatility model driven by fractional Brownian motion — is calibrated to market-implied volatility surfaces extracted from Deribit trade data across 30 dates spanning 2022–2025, covering major market events (LUNA collapse, FTX bankruptcy, BTC spot ETF approval, Bitcoin halving, BTC $100k, Trump inauguration) and baseline volatility regimes (low, medium, high IV).
 
 Three simulation schemes are compared:
 
@@ -30,6 +30,7 @@ Three simulation schemes are compared:
 │   │   ├── mixed_estimator.py  # McCrickerd & Pakkanen (2018) variance reduction
 │   │   ├── utils.py            # BS pricing, IV inversion, formatting, timers
 │   │   ├── visualizer.py       # Publication figures (smile fit, heatmaps, surfaces)
+│   │   ├── rbergomi_core.pyx   # Optional Cython core for the pricer
 │   │   └── __init__.py
 │   └── config/
 │       ├── dates.py            # Event and baseline calibration dates
@@ -37,15 +38,10 @@ Three simulation schemes are compared:
 │       ├── surfaces.py         # IV surface extraction settings
 │       └── plot_style.py       # Unified matplotlib style
 │
-├── data/
-│   ├── option/                 # Deribit parquet files (one per instrument)
-│   ├── option_index.parquet    # Lightweight query index
-│   └── option-list.csv         # Instrument metadata
-│
-├── Results/
+├── Results/                    # Pre-computed outputs committed to the repo
 │   ├── calibration/
-│   │   ├── tables/             # CSV results (one per date x method)
-│   │   ├── figures/            # PNG figures (4 per calibration)
+│   │   ├── tables/             # CSV results per date — cholesky_euler / hybrid_euler / hybrid_mixed
+│   │   ├── figures/hybrid_mixed/   # Publication PNGs (hybrid_mixed; other methods regenerated locally)
 │   │   └── latex_tables/       # .tex tables for Chapter 3
 │   ├── fat_tails_kurtosis/     # BTC return kurtosis analysis
 │   ├── implied_volatility_smile/
@@ -54,7 +50,7 @@ Three simulation schemes are compared:
 │   └── fbm_paths/              # fBm path visualization
 │
 ├── main_c.py                   # CLI dispatcher for all pipeline steps
-├── run_all_calibrations.py     # Production calibration: 3 methods x 22 dates
+├── run_all_calibrations.py     # Production calibration: 3 methods x 30 dates
 ├── iv_surface_builder.py       # IV surface extraction from Deribit parquet files
 ├── iv_visualizer.py            # IV surface 3D plots and animations
 ├── inverse_options.py          # Inverse option Greeks and payoff analysis
@@ -63,9 +59,19 @@ Three simulation schemes are compared:
 ├── generate_figures.py         # Reconstruct Chapter 3 figures from CSVs
 ├── populate_tables.py          # Generate LaTeX tables from calibration CSVs
 ├── data_cleaning.py            # Housekeeping utilities
+├── compare_h_bounds.py         # Sensitivity study on the Hurst lower bound
+├── compare_xi_approaches.py    # Forward-variance estimation comparison
+├── fix_calibration_bias.py     # Monte Carlo IV-bias diagnostics
+├── residual_analysis.py        # Aggregate residual / bias analysis
 ├── btc_spy_volatility/         # BTC vs S&P 500 volatility comparison (optional)
+├── volatility_data_2015_2024.csv
 └── requirements.txt
 ```
+
+> **Note:** the raw Deribit data (`data/`, ~2.1 GB of parquet files) is **not** tracked in the
+> repository — it is reconstructed locally via `python main_c.py --download` (see [Usage](#usage)).
+> The thesis LaTeX sources (`LaTeX/`), reference papers (`Paper/`) and notes (`docs/`) are also
+> excluded from version control.
 
 ---
 
@@ -147,7 +153,7 @@ Results saved in `Results/inverse_options/`.
 python main_c.py --rbergomi-snapshot
 ```
 
-**Full production run** — calibrates all 3 methods across all 22 dates (~2–3 hours):
+**Full production run** — calibrates all 3 methods across all 30 dates (~2–3 hours):
 
 ```bash
 python run_all_calibrations.py
@@ -332,7 +338,7 @@ RMSE quality thresholds: `good` < 10 pp, `acceptable` < 20 pp, `borderline` < 30
 | Single-date IV extraction | ~1 sec |
 | Single-date calibration (10k paths) | ~15–30 sec |
 | Single-date calibration with Numba | ~5–10 sec |
-| Full calibration run (66 total) | ~2–3 hours |
+| Full calibration run (90 total) | ~2–3 hours |
 | Figure generation (all) | ~30 min |
 
 ---
