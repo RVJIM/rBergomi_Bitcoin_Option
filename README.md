@@ -126,27 +126,62 @@ Python 3.11+
 ```
 rBergomi_Bitcoin_Option/
 │
-├── data/
-│   └── fetch_deribit.py          # Deribit API ingestion pipeline
+├── src/
+│   ├── rbergomi/
+│   │   ├── pricer.py           # rBergomi Monte Carlo pricer (all 3 schemes)
+│   │   ├── calibrator.py       # Calibrator + ForwardVarianceCurve + CalibrationResult
+│   │   ├── mixed_estimator.py  # Romano-Touzi Mixed Estimator (variance reduction)
+│   │   ├── utils.py            # BS pricing, IV inversion, formatting, timers
+│   │   ├── visualizer.py       # Publication figures (smile fit, heatmaps, surfaces)
+│   │   ├── rbergomi_core.pyx   # Optional Cython core for the pricer
+│   │   └── __init__.py
+│   └── config/
+│       ├── dates.py            # Event and baseline calibration dates
+│       ├── methods.py          # Method configs (scheme, paths, labels)
+│       ├── surfaces.py         # IV surface extraction settings
+│       └── plot_style.py       # Unified matplotlib style
 │
-├── model/
-│   ├── rbergomi.py               # rBergomi simulation (all 3 schemes)
-│   ├── variance_estimator.py     # Romano-Touzi Mixed Estimator
-│   └── implied_vol.py            # IV extraction (Brent root-finding)
+├── Results/
+│   ├── calibration/
+│   │   ├── tables/             # CSV results per date — cholesky_euler / hybrid_euler / hybrid_mixed
+│   │   ├── figures/            # Publication PNGs (regenerated locally via --generate-figures)
+│   │   ├── latex_tables/       # .tex tables for Chapter 3
+│   │   ├── h_bound_comparison/ # Sensitivity analysis on the Hurst lower bound
+│   │   ├── residuals/          # Aggregate residual and bias analysis
+│   │   ├── snapshot_scan/      # Per-date parameter snapshots (scan)
+│   │   └── snapshot_surfaces/  # Per-date IV surface snapshots
+│   ├── fat_tails_kurtosis/     # BTC return kurtosis analysis
+│   ├── implied_volatility_smile/
+│   ├── volatility_term_structure/
+│   ├── inverse_options/        # Greeks comparison (direct vs inverse)
+│   ├── fbm_paths/              # fBm path visualization
+│   ├── fix_bias/               # Monte Carlo IV-bias diagnostics output
+│   └── xi_comparison/          # Forward-variance estimation comparison output
 │
-├── calibration/
-│   ├── optimizer.py              # two-stage DE + Nelder-Mead
-│   └── objective.py              # RMSE loss over IV surface
-│
-├── results/
-│   ├── snapshots/                # per-date calibrated parameters + RMSE
-│   └── plots/                    # vol surface fits, parameter evolution
-│
-├── notebooks/
-│   └── analysis.ipynb            # full results, stress event analysis
-│
-└── README.md
+├── comparison/                 # Cross-method variant comparison (charts + JSON summary)
+├── main_c.py                   # CLI dispatcher for all pipeline steps
+├── run_all_calibrations.py     # Production calibration: 3 methods × 30 dates
+├── iv_surface_builder.py       # IV surface extraction from Deribit parquet files
+├── iv_visualizer.py            # IV surface 3D plots and animations
+├── inverse_options.py          # Inverse option Greeks and payoff analysis
+├── deribit_data.py             # Async Deribit REST API downloader
+├── btc_volatility_analysis.py  # Fat tails, smile, term structure analysis
+├── generate_figures.py         # Reconstruct Chapter 3 figures from CSVs
+├── populate_tables.py          # Generate LaTeX tables from calibration CSVs
+├── data_cleaning.py            # Housekeeping utilities
+├── compare_h_bounds.py         # Sensitivity study on the Hurst lower bound
+├── compare_xi_approaches.py    # Forward-variance estimation comparison
+├── fix_calibration_bias.py     # Monte Carlo IV-bias diagnostics
+├── residual_analysis.py        # Aggregate residual / bias analysis
+├── btc_spy_volatility/         # BTC vs S&P 500 volatility comparison (optional)
+├── portfolio.html              # Visual overview of code architecture and thesis structure
+├── volatility_data_2015_2024.csv
+└── requirements.txt
 ```
+
+> **Note:** the raw Deribit data (`data/`, ~2.1 GB of parquet files) is not tracked in the repository.
+> Reconstruct locally via `python main_c.py --download`.
+> The thesis LaTeX sources (`LaTeX/`), reference papers (`Paper/`) and notes (`docs/`) are also excluded from version control.
 
 ---
 
